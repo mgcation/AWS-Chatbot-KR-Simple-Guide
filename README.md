@@ -32,12 +32,12 @@
 
 ## 목차
 
-1. [Lex만 가지고 챗봇 만들기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#lex%EB%A7%8C-%EA%B0%80%EC%A7%80%EA%B3%A0-%EC%B1%97%EB%B4%87-%EB%A7%8C%EB%93%A4%EA%B8%B0)
-2. [Lex에 Lambda를 더해보기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#lex%EC%97%90-lambda%EB%A5%BC-%EB%8D%94%ED%95%B4%EB%B3%B4%EA%B8%B0)
-3. [Lambda에서 DynamoDB 호출하기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#lambda%EC%97%90%EC%84%9C-dynamodb-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0)
-4. [만든 챗봇을 페이스북 메신저에서 사용해보기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#%EB%A7%8C%EB%93%A0-%EC%B1%97%EB%B4%87%EC%9D%84-%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81-%EB%A9%94%EC%8B%A0%EC%A0%80%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0)
-5. [참고하기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#%EC%B0%B8%EA%B3%A0%ED%95%98%EA%B8%B0)
-6. [기여하기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#%EA%B8%B0%EC%97%AC%ED%95%98%EA%B8%B0)
+1. [Lex만 가지고 챗봇 만들기](#lex%EB%A7%8C-%EA%B0%80%EC%A7%80%EA%B3%A0-%EC%B1%97%EB%B4%87-%EB%A7%8C%EB%93%A4%EA%B8%B0)
+2. [Lex에 Lambda를 더해보기](#lex%EC%97%90-lambda%EB%A5%BC-%EB%8D%94%ED%95%B4%EB%B3%B4%EA%B8%B0)
+3. [Lambda에서 DynamoDB 호출하기](#lambda%EC%97%90%EC%84%9C-dynamodb-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0)
+4. [만든 챗봇을 페이스북 메신저에서 사용해보기](#%EB%A7%8C%EB%93%A0-%EC%B1%97%EB%B4%87%EC%9D%84-%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81-%EB%A9%94%EC%8B%A0%EC%A0%80%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0)
+5. [참고하기](#%EC%B0%B8%EA%B3%A0%ED%95%98%EA%B8%B0)
+6. [기여하기](#%EA%B8%B0%EC%97%AC%ED%95%98%EA%B8%B0)
 
 
 
@@ -96,7 +96,7 @@ User의 입력에서 어떤 식으로 slot을 추출해 낼 지를 도와줍니�
 
 ### Lambda
 
-`AWS Lambda`는 serverless 컴퓨팅을 제공하는 서비스입니다. 별도의 서버 없이 개발자가 정의한 함수만 수행될 수 있게 구성되어 있습니다. 개발자는 서버에 관한 지식 없이 `Python`, `Java`, `Node.js` 중 하나를 선택하여 프로그램을 작성할 수 있으며 [정해진 파라미터](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#event-%EB%8D%B0%EC%9D%B4%ED%84%B0)로 입력을 받고 개발자가 작성한대로 실행됩니다. *본 문서는 Python 3.6을 사용하였습니다.*
+`AWS Lambda`는 serverless 컴퓨팅을 제공하는 서비스입니다. 별도의 서버 없이 개발자가 정의한 함수만 수행될 수 있게 구성되어 있습니다. 개발자는 서버에 관한 지식 없이 `Python`, `Java`, `Node.js` 중 하나를 선택하여 프로그램을 작성할 수 있으며 [정해진 파라미터](#event-%EB%8D%B0%EC%9D%B4%ED%84%B0)로 입력을 받고 개발자가 작성한대로 실행됩니다. *본 문서는 Python 3.6을 사용하였습니다.*
 
 Lambda의 특징은 계속 서버가 살아있는 것이 아니라 수행될 때만 서버가 켜졌다가 함수가 종료되면 서버가 종료됩니다. 그러므로 Lambda 함수 내에서 계산된 변수들은 보존되지 않습니다.
 
