@@ -34,12 +34,12 @@
 
 ## 목차
 
-1. [Lex만 가지고 챗봇 만들기](#Lex)
-2. [Lex에 Lambda를 더해보기](#Lambda)
-3. [Lambda에서 DynamoDB 호출하기](#Lex와 Lambda의 연동)
-4. [만든 챗봇을 페이스북 메신저에서 사용해보기](#페이스북 메신저에 배포하기)
-5. [참고하기](#참고하기)
-6. [기여하기](#기여하기)
+1. [Lex만 가지고 챗봇 만들기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#lex%EB%A7%8C-%EA%B0%80%EC%A7%80%EA%B3%A0-%EC%B1%97%EB%B4%87-%EB%A7%8C%EB%93%A4%EA%B8%B0)
+2. [Lex에 Lambda를 더해보기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#lex%EC%97%90-lambda%EB%A5%BC-%EB%8D%94%ED%95%B4%EB%B3%B4%EA%B8%B0)
+3. [Lambda에서 DynamoDB 호출하기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#lambda%EC%97%90%EC%84%9C-dynamodb-%ED%98%B8%EC%B6%9C%ED%95%98%EA%B8%B0)
+4. [만든 챗봇을 페이스북 메신저에서 사용해보기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#%EB%A7%8C%EB%93%A0-%EC%B1%97%EB%B4%87%EC%9D%84-%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81-%EB%A9%94%EC%8B%A0%EC%A0%80%EC%97%90%EC%84%9C-%EC%82%AC%EC%9A%A9%ED%95%B4%EB%B3%B4%EA%B8%B0)
+5. [참고](#참고)
+6. [기여하기](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#%EA%B8%B0%EC%97%AC%ED%95%98%EA%B8%B0)
 
 
 
