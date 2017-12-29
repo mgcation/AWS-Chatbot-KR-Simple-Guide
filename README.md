@@ -1,4 +1,4 @@
-# 해당 문서는 현재 작성중입니다. 최근 수정 시간은 2017년 12월 29일 오전 09시 27분 입니다.
+해당 문서는 현재 작성중입니다. 최근 수정 시간은 2017년 12월 29일 오전 09시 36분 입니다.
 
 # AWS - Lex와 Lambda, DynamoDB를 이용한 챗봇 구현 안내서
 
@@ -20,12 +20,15 @@
 
 
 
-##### 더 좋은 질의 안내서들
+##### 더 좋은 퀄리티를 가진 안내서들
 
 - [Amazon Lex 와 Lambda 를 이용한 CoffeeBot 만들기](https://techpump.s3.amazonaws.com/AI%20Services%20Bootcamp_Serverless_Lex.pdf)
 - AWS 공식 문서
-  - [Lex](http://docs.aws.amazon.com/lex/latest/dg/what-is.html), [Lambda](http://docs.aws.amazon.com/lambda/latest/dg/welcome.html), [DynamoDB](http://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/Introduction.html), [boto3](https://boto3.readthedocs.io/en/latest/), ...
-- 등등 ...
+  - [Lex](http://docs.aws.amazon.com/lex/latest/dg/what-is.html)
+  - [Lambda](http://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
+  - [DynamoDB](http://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/Introduction.html)
+  - [boto3](https://boto3.readthedocs.io/en/latest/)
+  - 등등...
 
 
 
@@ -307,7 +310,7 @@ def lambda_handler(event, context):
 3. 페이스북에서 2가지 정보를 생성하고 받아야 합니다.
 
    1.  `대시보드` - `앱 시크릿 코드`
-   2. `제품추가` - `Messenger` - `토큰 생성` - `페이지 액세스 토큰` 
+   2.  `제품추가` - `Messenger` - `토큰 생성` - `페이지 액세스 토큰` 
 
 4. `AWS Lex`의 `Channels`탭에서 `Facebook`을 클릭하고 작성합니다.
 
