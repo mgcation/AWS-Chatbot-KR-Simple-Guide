@@ -1,5 +1,3 @@
-해당 문서는 현재 작성중입니다. 최근 수정 시간은 2017년 12월 29일 오전 09시 36분 입니다.
-
 # AWS - Lex와 Lambda, DynamoDB를 이용한 챗봇 구현 안내서
 
 > AWS 기반 지식 없이 AWS로 시작하는 챗봇 구현
@@ -48,9 +46,13 @@
 
 ### Lex 콘솔에서 챗봇 만들기
 
-대화 의도형 로봇입니다. USER가 원할 의도에 대해 대화흐름을 구성해 놓으면 USER의 의도에 맞춰 구성해 놓은 대화를 진행합니다. 하지만 LEX만으로는 제약이 많이 따릅니다. 예를 들면 순차적인 대화만 구성할 수 있습니다. 보다 똑똑한 LEX를 위해서는 개발자가 LEX와 USER사이에 프로그래밍 요소를 집어넣어야 하는 데 이것이 후술할 Lambda 입니다.
+<h1>Lex는</h1> 의도형 대화 로봇입니다. USER에게 보이고 싶은 대화흐름을 [의도 단위로 구성해 놓으면 그 의도에 맞춰 대화를 진행하게 됩니다. Lex는 [어터런스 구성을 통해 문장 속에서 특정 단어를 캐치하는 것을 매우 잘합니다. 아쉽게도 Lex는 현재 영어만 지원합니다.
 
-> 콘솔은 ~~
+> 예를 들어 `의도1 : 피자를 시키고 싶다.`, `의도2 : 호텔예약을 하고 싶다.` 두 가지 의도로 구성한 뒤, 유저의 입력에 따라 둘 중 어떤 의도를 수행시킬지 정하고 이에 따라 해당 대화흐름만 진행하게끔 합니다. 이는 Amazon 알렉사나 Samgsung 빅스비처럼 여러가지 주제가 다른 명령에 대해 대답을 할 수 있음을 시사합니다.
+
+<h1>Console은</h1> AWS 웹페이지에서 제공하는 화면을 의미합니다.
+
+그러면 이제 간단한 챗봇을 만들기 위해 `AWS Lex` 콘솔에 접속합시다.
 
 #### 인텐트
 
@@ -72,13 +74,13 @@
 
 ### Lex 콘솔에서 챗봇 테스트하기
 
-빌드, publish, 옆에 클릭 ㅇㅋ
+위 구성요소를 입맛에 맞게 채워놓고 우측 상단의 Build를 클릭하면 우측 `Test Chatbot`을 통해 테스트를 할 수 있습니다.
 
 ## Lex에 Lambda를 더해보기
 
 ### Lambda
 
-`AWS Lambda`는 serverless 컴퓨팅을 제공하는 서비스입니다. 별도의 서버 없이 개발자가 정의한 함수만 수행될 수 있게 구성되어 있습니다. 개발자는 서버에 관한 지식 없이 `Python`, `Java`, `Node.js` 중 하나를 선택하여 프로그램을 작성할 수 있으며 [정해진 파라미터](#Event)로 입력을 받고 개발자가 작성한대로 실행됩니다. *본 문서는 Python 3.6을 사용하였습니다.*
+`AWS Lambda`는 serverless 컴퓨팅을 제공하는 서비스입니다. 별도의 서버 없이 개발자가 정의한 함수만 수행될 수 있게 구성되어 있습니다. 개발자는 서버에 관한 지식 없이 `Python`, `Java`, `Node.js` 중 하나를 선택하여 프로그램을 작성할 수 있으며 [정해진 파라미터](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/blob/master/README.md#event-%EB%8D%B0%EC%9D%B4%ED%84%B0)로 입력을 받고 개발자가 작성한대로 실행됩니다. *본 문서는 Python 3.6을 사용하였습니다.*
 
 Lambda의 특징은 계속 서버가 살아있는 것이 아니라 수행될 때만 서버가 켜졌다가 함수가 종료되면 서버가 종료됩니다. 그러므로 Lambda 함수 내에서 계산된 변수들은 보존되지 않습니다.
 
@@ -245,7 +247,7 @@ def lambda_handler(event, context):
 }
 ```
 
-S는 String, L은 List 를 나타내며 `AWS DynamoDB 콘솔`에서 편리한 UI를 제공하므로 자료 입력시 마다 직접 위와 같이 하드 타이핑을 할 필요는 없습니다.
+S는 String, L은 List 를 나타내며 `AWS DynamoDB` 콘솔에서 편리한 UI를 제공하므로 자료 입력시 마다 직접 위와 같이 하드 타이핑을 할 필요는 없습니다.
 
 ### DynamoDB 호출하기
 
@@ -406,18 +408,24 @@ def lambda_handler(event, context):
 
 Response 길이가 25K 이상인 경우
 
-### API 제한, 규칙 문서
+### Lex에 대한 Guide, Limit
 
-써야댐
+- [Guide](http://docs.aws.amazon.com/ko_kr/lex/latest/dg/gl-guidelines.html)
+
+
+- [Limit](http://docs.aws.amazon.com/ko_kr/lex/latest/dg/gl-limits.html)
 
 ### 모르는 이슈에 대해서는?
 
-예시 : https://stackoverflow.com/questions/45039251/amazon-lex-error-an-error-occurred-badrequestexception-when-calling-the-putin
+stackoverflow나 구글링을 통해 알아봅니다.
 
-​	boto3을 사용하고 있는 중 ?가 문제를 일으키는 경우.
-​	주) aws console 과 lambda 간에는 이러한 문제가 발생하지 않음.
+- 예시 : https://stackoverflow.com/questions/45039251/amazon-lex-error-an-error-occurred-badrequestexception-when-calling-the-putin
 
-​		검색하고 문서에 기여해주세요
+  해당 문제는 boto3을 사용하고 있는 중, 물음표가 문제를 일으키는 경우입니다.
+
+  이렇게 쉽게 알 수 없는 에러들에 대해서 발견 후 해당 문서에 기여해주시면 감사하겠습니다.
+
+  > 본 문서에서 안내하는 aws lex console - lambda 간에는 해당 문제와 같은 물음표 문제가 발생하지 않음.
 
 
 
@@ -433,4 +441,7 @@ Response 길이가 25K 이상인 경우
 
 2. 응원 : 더 많은 사람이 볼 수 있게 Star를 누릅니다.
 
-[기여자 목록
+
+
+
+<center>[기여자 목록](https://github.com/mgcation/AWS-Chatbot-KR-Simple-Guide/graphs/contributors)</center>
