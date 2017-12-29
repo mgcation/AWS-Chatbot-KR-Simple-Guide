@@ -1,3 +1,5 @@
+# 해당 문서는 현재 작성중입니다. 최근 수정 시간은 2017년 12월 29일 오전 09시 27분 입니다.
+
 # AWS - Lex와 Lambda, DynamoDB를 이용한 챗봇 구현 안내서
 
 > AWS 기반 지식 없이 AWS로 시작하는 챗봇 구현
@@ -20,9 +22,9 @@
 
 ##### 더 좋은 질의 안내서들
 
-- AWS의 커피 봇
+- [Amazon Lex 와 Lambda 를 이용한 CoffeeBot 만들기](https://techpump.s3.amazonaws.com/AI%20Services%20Bootcamp_Serverless_Lex.pdf)
 - AWS 공식 문서
-  - Lex, Lambda, DynamoDB, SDK, ...
+  - [Lex](http://docs.aws.amazon.com/lex/latest/dg/what-is.html), [Lambda](http://docs.aws.amazon.com/lambda/latest/dg/welcome.html), [DynamoDB](http://docs.aws.amazon.com/ko_kr/amazondynamodb/latest/developerguide/Introduction.html), [boto3](https://boto3.readthedocs.io/en/latest/), ...
 - 등등 ...
 
 
@@ -41,7 +43,21 @@
 
 ## Lex만 가지고 챗봇 만들기
 
-콘솔
+### Lex 콘솔에서 챗봇 만들기
+
+대화 의도형 로봇입니다. USER가 원할 의도에 대해 대화흐름을 구성해 놓으면 USER의 의도에 맞춰 구성해 놓은 대화를 진행합니다. 하지만 LEX만으로는 제약이 많이 따릅니다. 예를 들면 순차적인 대화만 구성할 수 있습니다. 보다 똑똑한 LEX를 위해서는 개발자가 LEX와 USER사이에 프로그래밍 요소를 집어넣어야 하는 데 이것이 후술할 Lambda 입니다.
+
+> 콘솔은 ~~
+
+#### 인텐트
+
+#### 슬롯타입
+
+#### 어터런스
+
+#### 슬롯
+
+#### 에러 핸들링
 
 먼저 인식할 때 뭘 원하는지 파악하고 데이터를 출력해줌. speech recognition
 
@@ -51,19 +67,160 @@
 
 웹에 building System, 페이스북 API, 기타 챗서비스 API에 연동중
 
+### Lex 콘솔에서 챗봇 테스트하기
+
+빌드, publish, 옆에 클릭 ㅇㅋ
+
 ## Lex에 Lambda를 더해보기
 
-`AWS Lambda`는 serverless 컴퓨팅을 제공하는 서비스입니다. 함수 죽엇다 살앗다 함. python java node.js 함. python3.6 으로 설명함
+### Lambda
 
-메인함수는 머다
+`AWS Lambda`는 serverless 컴퓨팅을 제공하는 서비스입니다. 별도의 서버 없이 개발자가 정의한 함수만 수행될 수 있게 구성되어 있습니다. 개발자는 서버에 관한 지식 없이 `Python`, `Java`, `Node.js` 중 하나를 선택하여 프로그램을 작성할 수 있으며 [정해진 파라미터](#Event)로 입력을 받고 개발자가 작성한대로 실행됩니다. *본 문서는 Python 3.6을 사용하였습니다.*
 
-event, response event구성은 머다
+Lambda의 특징은 계속 서버가 살아있는 것이 아니라 수행될 때만 서버가 켜졌다가 함수가 종료되면 서버가 종료됩니다. 그러므로 Lambda 함수 내에서 계산된 변수들은 보존되지 않습니다.
 
-렉스와 람다 echo를 해보고 이해해보자
+### Lambda함수 정의하기
 
-권한주기
+1. `AWS Lambda` 콘솔에 접속합니다.
+
+2. 함수생성 (블루 프린트로 생성하면 lex와 관련된 코드를 하드코딩하지 않아도 됩니다.)
+
+   > 이름 : 사용자가 임의로 지정
+   >
+   > 런타임 : 작성할 언어 지정
+   >
+   > 역할 : 정의한 역할을 선택합니다. 해당 역할은 Lambda가 맡을 수 있고 CloudWatch Logs 권한이 있어야 합니다.
+
+   - 역할 정의하기
+     1. `AWS IAM` 콘솔에 접속합니다.
+     2. `역할`탭 선택
+     3. `역할 만들기`
+     4. `신뢰할 수 있는 유형 개체` : Lambda 클릭 후 다음
+     5. Lambda, DynamoDB, Lex로 검색하여 각각 FullAccess를 하나씩 선택합니다.
+     6. 이름과 설명을 설정하고 역할 만들기를 누릅니다.
+
+### Lex에 후크함수를 추가하기
+
+Lex는 유저의 입력 하나하나 마다 Lambda 함수를 호출할 수 있습니다.
+
+1. `AWS Lex` 콘솔에서 `Editor` 탭의 임의의 인텐트를 하나 선택합니다.
+2. `Lambda initialization and validation`에서 Initialization and validation code hook 체크
+3. 정의한 Lambda 함수를 목록에서 선택합니다.
+
+### Event 데이터
+
+Lambda가 다른 AWS 서비스들과 통신하는 데 있어 정해진 약속입니다. 이 규격을 벗어난 데이터는 에러를 발생시킬 수 있습니다. 그러므로 개발자는 Event 데이터 형식에 맞게 데이터를 읽고, 규격에 맞게 리턴해주어야 합니다.
+
+```python
+# lambda_handler : 람다의 메인함수
+def lambda_handler(event, context):
+  
+    event = ?	# : 첫번째 파라미터인 event가 lex가 lambda한테 전달한 Event 데이터입니다.
+    			# : Input Event 라고도 합니다.
+    
+    return ? 	# : lambda가 lex한테 전달할 Event 데이터입니다.
+  				# : Response 라고도 합니다.
+```
+
+### Input Event, Response의 형식
+
+> Reference : [AWS 공식 문서](http://docs.aws.amazon.com/lex/latest/dg/lambda-input-response-format.html)
+>
+> 해당 형식은 언제든지 바뀔 수 있습니다. 이는 "messageVersion": "값" 에 좌우합니다.
+
+```python
+# Input Event Format
+
+{
+  "currentIntent": {
+    "name": "intent-name",
+    "slots": {
+      "slot name": "value",
+      "slot name": "value"
+    },
+    "slotDetails": {
+      "slot name": {
+        "resolutions" : [
+          { "value": "resolved value" },
+          { "value": "resolved value" }
+        ],
+        "originalValue": "original text"
+      },
+      "slot name": {
+        "resolutions" : [
+          { "value": "resolved value" },
+          { "value": "resolved value" }
+        ],
+        "originalValue": "original text"
+      }
+    },
+    "confirmationStatus": "None, Confirmed, or Denied (intent confirmation, if configured)"
+  },
+  "bot": {
+    "name": "bot name",
+    "alias": "bot alias",
+    "version": "bot version"
+  },
+  "userId": "User ID specified in the POST request to Amazon Lex.",
+  "inputTranscript": "Text used to process the request",
+  "invocationSource": "FulfillmentCodeHook or DialogCodeHook",
+  "outputDialogMode": "Text or Voice, based on ContentType request header in runtime API request",
+  "messageVersion": "1.0",
+  "sessionAttributes": { 
+     "key": "value",
+     "key": "value"
+  },
+  "requestAttributes": { 
+     "key": "value",
+     "key": "value"
+  }
+}
+```
+
+```python
+# Response Format
+
+{
+    "sessionAttributes": {
+    "key1": "value1",
+    "key2": "value2"
+    ...
+  },
+  "dialogAction": {
+    "type": "ElicitIntent, ElicitSlot, ConfirmIntent, Delegate, or Close",
+    Full structure based on the type field. See below for details.
+  }
+}
+```
+
+dialogAction 에 대한 자세한 구조는 공식 문서를 참고바랍니다. *우측 상단에서 언어를 선택할 수 있습니다.*
+
+### Lex Input Event Echo 해보기
+
+보다 쉬운 이해를 위해 Lex Input Event가 어떻게 전달되는지 눈으로 직접 확인할 수 있는 예제입니다.
+
+```python
+def lambda_handler(event, context):
+    return {
+        'sessionAttributes': '',
+        'dialogAction': {
+            'type': 'Close',
+            'fulfillmentState' : 'Failed',
+            'message' : {
+                'contentType': 'PlainText',
+                'content': str(event),
+            }
+        }
+    }
+```
+
+위 코드를 Lambda 함수에 작성하고 Lex 콘솔에서 대화를 해보세요.
+
+이제 Lex에 Lambda를 올릴 수 있게 되었습니다.
 
 ## Lambda에서 DynamoDB 호출하기
+
+### DynamoDB 내부 구조
 
 `AWS DynamoDB`는 NoSQL형태의 구조를 가지는 데이터베이스 서비스입니다. 때문에 sql 관련 지식 없이도 쉽게 사용할 수 있다는 장점이 있습니다. 구조는 다음과 같은 JSON 구조를 띕니다.
 
@@ -85,7 +242,9 @@ event, response event구성은 머다
 }
 ```
 
-S는 String, L은 List 를 나타내며 `AWS DynamoDB 콘솔`에서 
+S는 String, L은 List 를 나타내며 `AWS DynamoDB 콘솔`에서 편리한 UI를 제공하므로 자료 입력시 마다 직접 위와 같이 하드 타이핑을 할 필요는 없습니다.
+
+### DynamoDB 호출하기
 
 위 Lex와 Lambda는 호출하고 리턴하는 관계(Caller와 Callee의 관계) 입니다. 그래서 별도의 스킬 없이 파라미터와 리턴 값을 이용하여 정보를 주고받게 됩니다. 그렇기 때문에 그 이외 제 3의 아마존 서비스를 사용하려면 별도의 기능이 필요합니다. 이러한 기능을 제공해주는 라이브러리를 `AWS SDK` 라고 부르며 Python에서는 `boto3`이라고도 부릅니다.
 
@@ -119,19 +278,23 @@ def lambda_handler(event, context):
     }
 ```
 
-위 boto3의 scan함수가 원활하게 작동하기 위해서는 해당 Lambda 함수의 권한에 DynamoDB 읽기 권한이 포함되어있어야 합니다. 위에서 정의한 Role(실행 역할)을 `AWS IAM`에서 수정합니다.
+### 권한 부여하기
 
-1. `AWS IAM`콘솔 접속 :arrow_right: 좌측 `역할`탭 :arrow_right: `해당 역할 선택` 
+위 boto3의 scan함수가 원활하게 작동하기 위해서는 해당 Lambda 함수의 권한에 DynamoDB 읽기 권한이 포함되어있어야 합니다. 위 Lambda를 정의할 때 DynamoDB에 대한 Access 권한을 주지 않았다면 Lambda가 가지는 Role(실행 역할)을 `AWS IAM`콘솔에서 수정합니다.
 
-2. 인라인 정책 추가
+1. `AWS IAM`콘솔 접속
 
-3. 서비스 : DynamoDB
+2. 좌측 `역할`탭 선택 및 우측에서 `해당 역할 선택` 
 
-4. 작업 : 읽기 체크
+3. 인라인 정책 추가
+
+4. 서비스 : DynamoDB
+
+5. 작업 : 읽기 체크
 
    > Scan 함수만 사용한다면 Scan만 체크해도 무방합니다.
 
-5. 권한 추가
+6. 권한 추가
 
 ## 만든 챗봇을 페이스북 메신저에서 사용해보기
 
@@ -228,21 +391,25 @@ def lambda_handler(event, context):
    >
    > 바로 반영이 되지 않는 경우가 있으니 원하는 로그가 나올때까지 스크롤을 올렸다 내렸다 반복하세요.
 
-### IAM USER 사용하기
+### 에러에 관한 설명
 
--
+#### An error has occurred: Invalid Lambda Response: Received error response from Lambda: Unhandled
 
-### 에러 (형식에 맞지안흔거, 비정상종료, 리턴 잘못)
+- Event 데이터 형식에 맞지 않게 Response를 Lex에 return 할 경우
+- Lambda 함수가 비정상으로 종료되어 Return 된 경우
+  - TypeError, IndexError, etc...
 
-An error has occurred: Invalid Lambda Response: Received error response from Lambda: Unhandled
+#### An error has occurred: Invalid Lambda Response: Lambda response exceeds maximum size (27509 vs. 25K)
 
-An error has occurred: Invalid Lambda Response: Lambda response exceeds maximum size (27509 vs. 25K)
+Response 길이가 25K 이상인 경우
 
 ### API 제한, 규칙 문서
 
+써야댐
+
 ### 모르는 이슈에 대해서는?
 
-​	https://stackoverflow.com/questions/45039251/amazon-lex-error-an-error-occurred-badrequestexception-when-calling-the-putin
+예시 : https://stackoverflow.com/questions/45039251/amazon-lex-error-an-error-occurred-badrequestexception-when-calling-the-putin
 
 ​	boto3을 사용하고 있는 중 ?가 문제를 일으키는 경우.
 ​	주) aws console 과 lambda 간에는 이러한 문제가 발생하지 않음.
